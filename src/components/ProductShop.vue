@@ -85,30 +85,32 @@ export default {
               <div class="rating">
                 <h2 class="rate">{{ product.rating.rate }}/5</h2>
                 <template v-if="roundRating">
-                  <template
+                  <span
                     v-for="(item, index) in roundRating.fullRound"
                     :key="index"
-                  >
-                    <span class="round-icon"></span>
-                  </template>
+                    class="round-icon"
+                  ></span>
                   <span v-if="roundRating.halfRound" class="round-icon"></span>
-                  <template
+                  <span
                     v-for="(item, index) in roundRating.emptyRound"
                     :key="index"
-                  >
-                    <span class="round-icon empty"></span>
-                  </template>
+                    class="round-icon empty"
+                  ></span>
                 </template>
               </div>
             </div>
             <hr />
             <br />
-            <p class="product-description">{{ product.description }}</p>
-
-            <hr class="line" />
-            <h2 class="product-price">{{ product.price }}</h2>
+            <p class="product-description">
+              {{ product.description }}
+            </p>
+            <div class="line"></div>
+            <h2 class="product-price">${{ product.price }}</h2>
             <div class="button-pruduct">
-              <button @click="nextProduct" class="next-button">next</button>
+              <button class="button-pruduct buy">buy now</button>
+              <button @click="nextProduct" class="button-pruduct next">
+                next product
+              </button>
             </div>
           </div>
         </div>
