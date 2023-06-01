@@ -1,5 +1,5 @@
 <script>
-import "../assets/Style.css";
+import "../assets/css/Style.css";
 export default {
   data() {
     return {

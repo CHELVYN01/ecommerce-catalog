@@ -9,7 +9,7 @@
   /* font */
   --font-information: "Inter";
   /* image */
-  --bg-pattern: url("./img/bg-pattern.svg");
+  --bg-pattern: url("../img/bg-pattern.svg");
 }
 * {
   /* display: flex; */
@@ -299,7 +299,7 @@
   align-items: center;
 
   .bg {
-    background-image: url("./img/sad-face-revisi.png");
+    background-image: url("../img/sad-face-revisi.png");
     background-size: 75%;
     background-repeat: no-repeat;
     background-position: center;
