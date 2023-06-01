@@ -1,3 +1,37 @@
+<template>
+  <div>
+    <div v-if="dataLoaded">
+      <h2 class="category-title">Semua Produk:</h2>
+      <div class="product-container">
+        <div v-show="visibleProducts.length > 0">
+          <img
+            v-if="isClothingCategory(visibleProducts[productIndex].category)"
+            :src="visibleProducts[productIndex].image"
+            :alt="visibleProducts[productIndex].title"
+            class="product-image"
+          />
+          <p
+            v-if="isClothingCategory(visibleProducts[productIndex].category)"
+            class="product-title"
+          >
+            {{ visibleProducts[productIndex].title }}
+          </p>
+          <div v-else class="not-found">
+            <p class="not-found-text">Not Found</p>
+          </div>
+        </div>
+        <div v-show="visibleProducts.length === 0" class="not-found">
+          <p class="not-found-text">Not Found</p>
+        </div>
+      </div>
+      <button @click="nextProduct" class="next-button">Next</button>
+    </div>
+    <div v-else>
+      <p>Loading...</p>
+    </div>
+  </div>
+</template>
+
 <script>
 export default {
   data() {
@@ -5,6 +39,7 @@ export default {
       data: null,
       productIndex: 0,
       visibleProducts: [],
+      dataLoaded: false,
     };
   },
   mounted() {
@@ -16,56 +51,25 @@ export default {
         const response = await fetch("https://fakestoreapi.com/products");
         const data = await response.json();
         this.data = data;
-        console.log(data);
-        this.filterProducts();
+        this.visibleProducts = data;
+        this.dataLoaded = true;
       } catch (error) {
         console.error(error);
-      }
-    },
-    filterProducts() {
-      if (this.data) {
-        this.visibleProducts = this.data.filter(
-          (product) =>
-            product.category === "men's clothing" ||
-            product.category === "women's clothing"
-        );
       }
     },
     nextProduct() {
       if (this.productIndex < this.visibleProducts.length - 1) {
         this.productIndex++;
+      } else {
+        this.productIndex = 0;
       }
+    },
+    isClothingCategory(category) {
+      return category === "men's clothing" || category === "women's clothing";
     },
   },
 };
 </script>
-
-<template>
-  <div>
-    <div v-if="data">
-      <h2 class="category-title">Semua Kategori:</h2>
-      <div class="product-container">
-        <div
-          v-for="product in visibleProducts"
-          :key="product.id"
-          v-show="productIndex === visibleProducts.indexOf(product)"
-          :class="{
-            'women-clothing': product.category === 'women\'s clothing',
-            'men-clothing': product.category === 'men\'s clothing',
-          }"
-        >
-          <img
-            :src="product.image"
-            :alt="product.title"
-            class="product-image"
-          />
-          <p class="product-title">{{ product.title }}</p>
-          <button @click="nextProduct" class="next-button">Next</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style>
 .category-title {
@@ -75,36 +79,36 @@ export default {
 
 .product-container {
   display: flex;
-  flex-wrap: wrap;
-}
-
-.product-container > div {
-  flex: 0 0 300px;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.women-clothing {
-  background-color: #fde2ff;
-}
-
-.men-clothing {
-  background-color: #d6e6ff;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .product-image {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
+  width: 300px;
+  height: auto;
   margin-bottom: 10px;
 }
 
 .product-title {
   font-size: 16px;
   margin-bottom: 10px;
+}
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: #ffffff;
+  margin-top: 20px;
+}
+
+.not-found-text {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: red;
 }
 
 .next-button {
@@ -114,5 +118,6 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
 }
 </style>
