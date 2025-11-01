@@ -68,84 +68,92 @@ export default {
 };
 </script>
 <template>
-  <div>
+  <div class="app-container">
     <section v-if="data">
-      <div v-show="!loading">
-        <div
-          v-for="product in visibleProducts"
-          :key="product.category"
-          v-show="productIndex === visibleProducts.indexOf(product)"
-        >
-          <div
-            v-if="isClothingCategory(visibleProducts[productIndex].category)"
-            :class="{
-              'women-clothing': product.category === 'women\'s clothing',
-              'men-clothing': product.category === 'men\'s clothing',
-            }"
-          >
-            <div class="bg">
-              <img
-                :src="product.image"
-                :alt="product.title"
-                class="product-image"
-              />
-              <div class="product">
-                <h2 class="product-title">{{ product.title }}</h2>
-                <div class="information">
-                  <h3 class="product-category">{{ product.category }}</h3>
-                  <div class="rating">
-                    <h2 class="rate">{{ product.rating.rate }}/5</h2>
-                    <template v-if="roundRating">
-                      <span
-                        v-for="(item, index) in roundRating.fullRound"
-                        :key="index"
-                        class="round-icon"
-                      ></span>
-                      <span
-                        v-if="roundRating.halfRound"
-                        class="round-icon"
-                      ></span>
-                      <span
-                        v-for="(item, index) in roundRating.emptyRound"
-                        :key="index"
-                        class="round-icon empty"
-                      ></span>
-                    </template>
+      <transition name="fade" mode="out-in">
+        <div v-if="!loading" key="content">
+          <transition name="slide-fade" mode="out-in">
+            <div
+              v-for="product in visibleProducts"
+              :key="product.id"
+              v-show="productIndex === visibleProducts.indexOf(product)"
+            >
+              <div
+                v-if="isClothingCategory(visibleProducts[productIndex].category)"
+                :class="{
+                  'women-clothing': product.category === 'women\'s clothing',
+                  'men-clothing': product.category === 'men\'s clothing',
+                }"
+              >
+                <div class="bg">
+                  <div class="image-container">
+                    <img
+                      :src="product.image"
+                      :alt="product.title"
+                      class="product-image"
+                    />
+                  </div>
+                  <div class="product">
+                    <h2 class="product-title">{{ product.title }}</h2>
+                    <div class="information">
+                      <h3 class="product-category">{{ product.category }}</h3>
+                      <div class="rating">
+                        <h2 class="rate">{{ product.rating.rate }}/5</h2>
+                        <template v-if="roundRating">
+                          <span
+                            v-for="(item, index) in roundRating.fullRound"
+                            :key="'full-' + index"
+                            class="star-icon"
+                          >★</span>
+                          <span
+                            v-if="roundRating.halfRound"
+                            class="star-icon half"
+                          >★</span>
+                          <span
+                            v-for="(item, index) in roundRating.emptyRound"
+                            :key="'empty-' + index"
+                            class="star-icon empty"
+                          >★</span>
+                        </template>
+                      </div>
+                    </div>
+                    <hr />
+                    <br />
+                    <p class="product-description">{{ product.description }}</p>
+                    <div class="line"></div>
+                    <h2 class="product-price">${{ product.price }}</h2>
+                    <div class="button-pruduct">
+                      <button class="button-pruduct buy">
+                        <span>Buy Now</span>
+                      </button>
+                      <button @click="nextProduct" class="button-pruduct next">
+                        <span>Next Product</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <hr />
-                <br />
-                <p class="product-description">{{ product.description }}</p>
-                <div class="line"></div>
-                <h2 class="product-price">${{ product.price }}</h2>
-                <div class="button-pruduct">
-                  <button class="button-pruduct buy">buy now</button>
-                  <button @click="nextProduct" class="button-pruduct next">
-                    next product
-                  </button>
+              </div>
+              <div v-else>
+                <div class="unavailable">
+                  <div class="bg">
+                    <div class="container-unavailable">
+                      <p class="unavailable-font">
+                        This product is unavailable to show
+                      </p>
+                      <button @click="nextProduct" class="unavailable-next">
+                        Next Product
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-else>
-            <div class="unavailable">
-              <div class="bg">
-                <div class="container-unavailable">
-                  <p class="unavailable-font">
-                    This product is unavailable to show
-                  </p>
-                  <button @click="nextProduct" class="unavailable-next">
-                    next product
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          </transition>
         </div>
-      </div>
-      <div v-show="loading" class="loading">
-        <!-- <div class="bg"></div> -->
-      </div>
+        <div v-else class="loading" key="loading">
+          <div class="spinner"></div>
+        </div>
+      </transition>
     </section>
   </div>
 </template>
